@@ -35,7 +35,8 @@
   for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
   if(!('DecompressionStream' in window))throw new Error('Selain ei tue sivuston purkamista. Kokeile uutta Chrome- tai Edge-versiota.');
   const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
-  const html=await new Response(stream).text();
+  let html=await new Response(stream).text();
+  html=html.replace(/\\s*<div class="live-pill" id="catalog-count"[^>]*>[\\s\\S]*?<\\/div>/, '');
   document.open();document.write(html);document.close();
  }catch(error){
   document.getElementById('status').textContent='Sivuston lataus ei onnistunut.';
