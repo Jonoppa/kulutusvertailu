@@ -37,6 +37,41 @@
   const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
   let html=await new Response(stream).text();
   html=html.replace(/\s*<div class="live-pill" id="catalog-count"[^>]*>[\s\S]*?<\/div>/, '');
+  html=html.replace(/        <div class="field">\s*<label for="gasoline-price">[\s\S]*?(?=        <div class="field">\s*<label for="annual-km">)/, [
+'        <div class="field">',
+'          <label for="gasoline-price">Bensiini 95E10</label>',
+'          <div class="input-unit"><input id="gasoline-price" type="number" min="0" max="10" step="0.001" value="2.149"><span class="unit">€/l</span></div>',
+'          <div class="field-note">Oletus: Tankille.fi:n Suomen halvin ilmoitettu hinta viimeisen 24 tunnin listalla. Bensiinimallien laskennassa käytetään oletuksena 95E10:tä.</div>',
+'        </div>',
+'        <div class="field">',
+'          <label for="gasoline98-price">Bensiini 98E5</label>',
+'          <div class="input-unit"><input id="gasoline98-price" type="number" min="0" max="10" step="0.001" value="2.259"><span class="unit">€/l</span></div>',
+'          <div class="field-note">Oletus: Tankille.fi:n Suomen halvin ilmoitettu hinta viimeisen 24 tunnin listalla. Voit valita tämän käsin lisätyn auton polttoaineeksi.</div>',
+'        </div>',
+'        <div class="field">',
+'          <label for="diesel-price">Diesel</label>',
+'          <div class="input-unit"><input id="diesel-price" type="number" min="0" max="10" step="0.001" value="2.353"><span class="unit">€/l</span></div>',
+'          <div class="field-note">Oletus: Tankille.fi:n Suomen halvin ilmoitettu hinta viimeisen 24 tunnin listalla.</div>',
+'        </div>',
+'        <div class="field">',
+'          <label for="home-price">Sähkö · kotilataus</label>',
+'          <div class="input-unit"><input id="home-price" type="number" min="0" max="5" step="0.01" value="0.15"><span class="unit">€/kWh</span></div>',
+'          <div class="field-note">Laskennallinen kokonaishinta: sähköenergia ja myyjän marginaali + yleissiirron suuntaa-antava maksu + sähkövero, kaikki verollisena. Oman verkkoyhtiön ja sopimuksen hinta voi poiketa.</div>',
+'        </div>',
+'        <div class="field">',
+'          <label for="public-price">Sähkö · julkinen lataus</label>',
+'          <div class="input-unit"><input id="public-price" type="number" min="0" max="5" step="0.01" value="0.30"><span class="unit">€/kWh</span></div>',
+'          <div class="field-note">Yleinen vertailuoletus julkiselle lataukselle: tavallinen lataus on tyypillisesti noin 0,27 €/kWh ja pikalataus noin 0,38 €/kWh. Asemakohtaiset hinnat vaihtelevat.</div>',
+'        </div>'
+  ].join('\n') + '\n');
+  html=html.replace("      const fuelName = isEV ? 'Sähkö' : first.fuelName;", "      const fuelName = isEV ? 'Sähkö' : first.fuelName === 'Bensiini' ? '95E10' : first.fuelName;");
+  html=html.replace("      gasoline: document.getElementById('gasoline-price'), diesel: document.getElementById('diesel-price'), e85: document.getElementById('e85-price'), gas: document.getElementById('gas-price'), home: document.getElementById('home-price'),\n      public: document.getElementById('public-price'), annual: document.getElementById('annual-km'),", "      gasoline: document.getElementById('gasoline-price'), gasoline98: document.getElementById('gasoline98-price'), diesel: document.getElementById('diesel-price'), home: document.getElementById('home-price'),\n      public: document.getElementById('public-price'), annual: document.getElementById('annual-km'),");
+  html=html.replace("    const fuelUnitPrice = car => car.fuelName === 'Diesel' ? numeric(els.diesel) : car.fuelName === 'Kaasu' ? numeric(els.gas) : car.fuelName === 'E85' ? numeric(els.e85) : numeric(els.gasoline);", "    const fuelUnitPrice = car => car.fuelName === 'Diesel' ? numeric(els.diesel) : car.fuelName === '98E5' ? numeric(els.gasoline98) : car.fuelName === 'Kaasu' ? 2.20 : car.fuelName === 'E85' ? 1.25 : numeric(els.gasoline);");
+  html=html.replace("    const manualFuelOptions = [\n      { value: 'petrol', label: 'Bensiini' },\n      { value: 'diesel', label: 'Diesel' },", "    const manualFuelOptions = [\n      { value: 'petrol-95', label: 'Bensiini 95E10' },\n      { value: 'petrol-98', label: 'Bensiini 98E5' },\n      { value: 'diesel', label: 'Diesel' },");
+  html=html.replace("      car.fuelName = kind === 'diesel' || kind === 'diesel-hybrid' || kind === 'phev-diesel' ? 'Diesel' : kind === 'electric' ? 'Sähkö' : kind === 'gas' ? 'Kaasu' : kind === 'e85' ? 'E85' : 'Bensiini';", "      car.fuelName = kind === 'diesel' || kind === 'diesel-hybrid' || kind === 'phev-diesel' ? 'Diesel' : kind === 'electric' ? 'Sähkö' : kind === 'gas' ? 'Kaasu' : kind === 'e85' ? 'E85' : kind === 'petrol-98' ? '98E5' : '95E10';");
+  html=html.replace("      return setManualKind(car, 'petrol');", "      return setManualKind(car, 'petrol-95');");
+  html=html.replace("    [els.gasoline, els.diesel, els.e85, els.gas, els.home, els.public, els.annual].forEach(el => el.addEventListener('input', render));", "    [els.gasoline, els.gasoline98, els.diesel, els.home, els.public, els.annual].forEach(el => el.addEventListener('input', render));");
+
   document.open();document.write(html);document.close();
  }catch(error){
   document.getElementById('status').textContent='Sivuston lataus ei onnistunut.';
