@@ -1,13 +1,17 @@
 # Autokulut
 
-Autokulut-sivuston staattinen esikatselu. Sivusto ladataan `index.html`-tiedostosta ja puretaan selaimessa gzip-pakatuista `site-data-01.txt`–`site-data-11.txt`-tiedostoista. Varsinainen käyttöliittymä ja laskentalogiikka ovat pakatussa HTML:ssä.
+Autokulut-sivuston staattinen selainversio. Käynnistyssivu on `index.html`, joka lataa ja purkaa selaimessa gzip-pakatuista `site-data-01.txt`–`site-data-11.txt`-tiedostoista varsinaisen käyttöliittymän ja laskentalogiikan.
 
-## GitHub Pagesin käyttöönotto
+## Julkaise GitHub Pagesissa
 
-1. Avaa repositorion **Settings → General → Danger Zone → Change visibility** ja valitse **Make public**. Julkisuus tarkoittaa, että lähdekoodi ja kaikki sivuston aineisto ovat kaikkien nähtävissä.
-2. Avaa **Settings → Pages**.
-3. Kohdassa **Build and deployment** valitse **Deploy from a branch**.
-4. Branch: `main`; folder: `/ (root)`; valitse **Save**.
-5. Odota, että GitHub Pages näyttää julkaistun URL-osoitteen. Tämän repositorion osoitteen oletusmuoto on `https://jonoppa.github.io/kulutusvertailu/`.
+**Tärkeää:** julkisen repositorion koodi, aineisto ja sivusto ovat kaikkien nähtävissä. Älä lisää tähän repositorioon salasanoja, API-avaimia tai muuta luottamuksellista tietoa.
 
-Jatkossa muutokset `index.html- ja `site-data-*.txt`-tiedostoihin `main`-haarassa päivittyvät Pages-sivulle automaattisesti. GitHub Pagesin julkaisu ja välimuistin päivitys voivat kestää hetken jokaisen commitin jälkeen.
+1. Avaa [repository settings](https://github.com/Jonoppa/kulutusvertailu/settings).
+2. Kohdassa **General → Danger Zone → Change repository visibility** valitse **Make public** ja vahvista GitHubin pyytämät tarkistukset.
+3. Avaa [Pages-asetukset](https://github.com/Jonoppa/kulutusvertailu/settings/pages).
+4. Valitse **Build and deployment → Deploy from a branch**.
+5. Valitse branchiksi `main` ja kansioksi `/ (root)`, ja paina **Save**.
+
+Kun GitHub Pages on julkaissut sivun, sen osoite on tavallisesti [https://jonoppa.github.io/kulutusvertailu/](https://jonoppa.github.io/kulutusvertailu/). Jos sivu ei vielä aukea, tarkista Pages-asetusten julkaisutila ja odota hetki.
+
+Jatkossa `index.html`- ja `site-data-*.txt`-tiedostojen muutokset `main`-haarassa tulevat mukaan seuraavaan Pages-julkaisuun automaattisesti. Julkaisu voi kestää muutaman minuutin.
