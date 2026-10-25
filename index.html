@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Autokulut – yksityinen esikatselu</title>
+<style>
+:root{color-scheme:dark}body{margin:0;background:#071c1a;color:#eafff8;font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif;display:grid;min-height:100vh;place-items:center}.panel{width:min(680px,calc(100% - 40px));padding:32px;border:1px solid #21524a;border-radius:22px;background:#0d2a26;box-shadow:0 22px 80px #0005}h1{margin:0 0 12px;font-size:clamp(26px,5vw,40px)}p{color:#b8d5ce}.pulse{display:inline-block;width:9px;height:9px;border-radius:50%;background:#6ef0bd;margin-right:10px;box-shadow:0 0 18px #6ef0bd}code{background:#061613;padding:3px 7px;border-radius:6px}#err{color:#ffb4a9;white-space:pre-wrap}
+</style>
+</head>
+<body><main class="panel"><h1><span class="pulse"></span>Autokulut</h1><p>Ladataan yksityistä esikatselua…</p><p id="status">Puretaan sivuston sisältöä selaimessa.</p><p id="err"></p></main>
+<script>
+(async()=>{
+ try{
+  const chunks=await Promise.all(Array.from({length:8},async(_,n)=>{
+   const r=await fetch('./site-part-'+(n+1)+'.txt',{cache:'no-store'});
+   if(!r.ok) throw new Error('Sivuston osan '+(n+1)+' lataus epäonnistui (HTTP '+r.status+').');
+   return (await r.text()).trim();
+  }));
+  const b64=chunks.join('');
+  const raw=atob(b64);
+  const bytes=new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
+  if(typeof DecompressionStream==='undefined') throw new Error('Selain ei tue gzip-purkamista. Avaa sivu uudemmalla Chromella tai Edgellä.');
+  const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+  const html=await new Response(stream).text();
+  document.open();document.write(html);document.close();
+ }catch(e){document.getElementById('status').textContent='Sivuston lataus epäonnistui.';document.getElementById('err').textContent=e.message+' Tarkista, että kaikki site-part-1.txt … site-part-8.txt -tiedostot ovat samassa hakemistossa ja palvelin toimii portissa 8000.';}
+})();
+</script></body></html>
