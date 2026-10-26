@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Autokulut – vertaile autojen energiakustannuksia.">
-<title>Autokulut – latautuu</title>
+<meta name="description" content="Kulutusvertailu – vertaile kulutusta automalleittain ja arvioi polttoaine- sekä latauskustannuksia.">
+<title>Kulutusvertailu – latautuu</title>
 <style>
 :root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#071d1b;color:#eafff8;font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.card{width:min(620px,100%);padding:32px;border:1px solid #24564d;border-radius:24px;background:linear-gradient(145deg,#10332d,#0b2422);box-shadow:0 24px 90px #0006}h1{margin:0 0 8px;font-size:clamp(28px,6vw,42px);letter-spacing:-.04em}.mark{color:#72f1b9}p{color:#c3dcd4}progress{width:100%;height:8px;accent-color:#72f1b9}small{color:#8eada4}#error{color:#ffb4a9;white-space:pre-wrap}
 </style>
 </head>
 <body>
 <main class="card">
-<h1><span class="mark">⚡</span> Autokulut</h1>
+<h1><span class="mark">⚡</span> Kulutusvertailu</h1>
 <p id="status">Ladataan vertailusivua…</p>
 <progress id="progress" max="11" value="0"></progress>
 <p><small>Julkaisuversio latautuu. Ensimmäinen avaaminen voi kestää hetken.</small></p>
@@ -72,8 +72,8 @@
   html=html.replace("      return setManualKind(car, 'petrol');", "      return setManualKind(car, 'petrol-95');");
   html=html.replace("    [els.gasoline, els.diesel, els.e85, els.gas, els.home, els.public, els.annual].forEach(el => el.addEventListener('input', render));", "    [els.gasoline, els.gasoline98, els.diesel, els.home, els.public, els.annual].forEach(el => el.addEventListener('input', render));");
 
-  html=html.replace('<h1>Paljonko autosi oikeasti maksaa ajaa?</h1>', '<h1>Vertaa autojen ajokustannuksia</h1>');
-  html=html.replace('<title>Autokulut – automerkkien vertailu</title>', '<title>Autokulut – autojen ajokustannusvertailu</title>');
+  html=html.replace('<h1>Paljonko autosi oikeasti maksaa ajaa?</h1>', '<h1>Vertaile kulutusta automalleittain</h1>');
+  html=html.replace('<title>Autokulut – automerkkien vertailu</title>', '<title>Kulutusvertailu – vertaile kulutusta automalleittain</title>');
   html=html.replace('<meta name="description" content="Vertaa eri automerkkien energiakustannuksia vuodesta 1990 eteenpäin ja syötä kulutustiedot myös itse.">', '<meta name="description" content="Vertaa autojen polttoaine- ja latauskustannuksia valitun kulutusprofiilin ja vuotuisen ajomäärän perusteella.">');
   html=html.replace('</style>', "\n    #left-source a, #right-source a { display: none !important; }\n    .annual-comparison { margin-top: 22px; padding: 22px; }\n    .annual-intro { margin: 7px 0 18px; color: var(--muted); font-size: 13px; line-height: 1.55; }\n    .annual-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }\n    .annual-card { min-width: 0; padding: 17px; border: 1px solid var(--line); border-radius: 15px; background: #fbfdfd; }\n    .annual-tag { margin-bottom: 8px; color: var(--teal-dark); font-size: 10px; font-weight: 850; letter-spacing: .08em; }\n    .annual-card h3 { margin: 0 0 14px; font-size: 17px; overflow-wrap: anywhere; }\n    .annual-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 9px 0; border-bottom: 1px solid #e4eded; font-size: 13px; }\n    .annual-row:last-child { border-bottom: 0; }\n    .annual-row span { color: var(--muted); }\n    .annual-row strong { text-align: right; color: var(--ink); white-space: nowrap; }\n    .annual-row.total strong { color: var(--teal-dark); font-size: 18px; }\n    .annual-summary { margin-top: 16px; padding: 16px; border-radius: 13px; background: var(--teal-soft); color: var(--teal-dark); font-size: 14px; line-height: 1.55; }\n    .annual-note { margin-top: 11px; color: var(--muted); font-size: 11px; line-height: 1.5; }\n    @media (max-width: 650px) { .annual-comparison { padding: 17px; } .annual-grid { grid-template-columns: 1fr; } }\n\n" + '</style>');
   html=html.replace('<p class="footnote">', "<section class=\"panel annual-comparison\" id=\"annual-comparison\" aria-labelledby=\"annual-title\">\n  <h2 id=\"annual-title\">Vuositason polttoaine- ja energiakustannukset</h2>\n  <p class=\"annual-intro\">Arvio perustuu yllä ilmoitettuun ajomäärään, valittuun kulutusprofiiliin ja hintoihin. Sähköautoille näytetään sekä koti- että julkisen latauksen vuosikustannus.</p>\n  <div class=\"annual-grid\">\n    <div class=\"annual-card\" id=\"left-annual\"><div class=\"hint\">Valitse nykyinen auto nähdäksesi vuosikustannuksen.</div></div>\n    <div class=\"annual-card\" id=\"right-annual\"><div class=\"hint\">Valitse vertailtava auto nähdäksesi vuosikustannuksen.</div></div>\n  </div>\n  <div class=\"annual-summary\" id=\"annual-summary\">Valitse molemmat autot, niin näet vuosikustannusten eron.</div>\n  <p class=\"annual-note\">Laskelma kuvaa energia- tai polttoainekuluja, ei auton arvonalenemaa, vakuutuksia, huoltoja tai veroja. Sähköauton vuosittainen vertailusäästö käyttää kotilatausta.</p>\n</section>\n  <p class=\"footnote\">");
